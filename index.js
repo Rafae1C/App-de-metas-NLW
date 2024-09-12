@@ -15,7 +15,7 @@ const carregarMetas = async () => {
     }
 }
 const salvarMetas = async () => {
-    await fs.writeFile("metas.jsons", JSON.stringify(metas, null, 2))
+    await fs.writeFile("metas.json", JSON.stringify(metas, null, 2))
 }
 const cadastrarMeta = async () => {
     const meta = await input({message: "Qual a sua meta?"})
