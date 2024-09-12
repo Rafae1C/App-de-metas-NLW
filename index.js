@@ -1,13 +1,22 @@
 const {select, input, checkbox} = require("@inquirer/prompts")
+const fs = require("fs").promises
 
 let mensagem = "Bem vindo ao TargetOn";
 
-let meta = {
-    value: "Tomar 3L de água por dia",
-    checked: false,
-}
-let metas = [meta]
+let metas
 
+const carregarMetas = async () => {
+    try{
+        const dados = await fs.readFile("metas.json", "utf-8")
+        metas = JSON.parse(dados)
+    }
+    catch(erro) {
+        metas = []
+    }
+}
+const salvarMetas = async () => {
+    await fs.writeFile("metas.jsons", JSON.stringify(metas, null, 2))
+}
 const cadastrarMeta = async () => {
     const meta = await input({message: "Qual a sua meta?"})
 
@@ -66,7 +75,6 @@ const metasRealizadas = async () => {
         choices: [...realizadas]
     })
 }
-
 const metasAbertas = async () => {
     const abertas = metas.filter((meta) => {
         return meta.checked != true
@@ -82,7 +90,6 @@ const metasAbertas = async () => {
         choices: [...abertas]
     })
 }
-
 const removerMetas = async () => {
     if(metas.length == 0) {
         mensagem = "Não exitem metas!"
@@ -112,7 +119,6 @@ const removerMetas = async () => {
 
     mensagem = "Meta(s) removida(s) com sucesso!"
 }
-
 const mostrarMensagem = () => {
     console.clear();
 
@@ -124,8 +130,12 @@ const mostrarMensagem = () => {
 }
 
 const start = async() => {
+    await carregarMetas()
+
+
     while(true){
         mostrarMensagem()
+        await salvarMetas()
         
         const opção = await select({
             message: "Menu",
