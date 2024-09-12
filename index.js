@@ -21,6 +21,11 @@ const cadastrarMeta = async () => {
     )
 }
 const listarMetas = async () => {
+    if(metas.length == 0) {
+        mensagem = "Não exitem metas cadastradas para serem listadas!"
+        return
+    }
+
     const respostas = await checkbox({
         message: "Utilize o espaço para marcar/desmarcar as metas e enter para finalizar essa etapa",
         choices: [...metas],
