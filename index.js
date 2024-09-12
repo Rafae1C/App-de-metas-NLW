@@ -75,7 +75,37 @@ const metasAbertas = async () => {
         choices: [...abertas]
     })
 }
+// ------------------------------------------------------------------------------------------
+const removerMetas = async () => {
+    if(metas.length == 0) {
+        mensagem = "Não exitem metas!"
+        return
+    }
 
+    const metasDesmarcadas = metas.map((meta) => {
+        return {value: meta.value, checked: false}
+    })
+
+    const itensARemover = await checkbox({
+        message: "Selecione o item que deseja remover da sua lista.",
+        choices: [...metasDesmarcadas],
+        instructions: false,
+    })
+
+    if(itensARemover.length == 0) {
+        console.log("Nenhum item foi selecionado para ser removido")
+        return
+    }
+
+    itensARemover.forEach((item) => {
+        metas = metas.filter((meta) => {
+            return meta.value != item
+        })
+    })
+
+    console.log("Meta(s) removida(s) com sucesso!")
+}
+// -------------------------------------------------------------------------------------------------------
 const start = async() => {
     while(true){
         
@@ -99,6 +129,10 @@ const start = async() => {
                     value: "abertas"
                 },
                 {
+                    name: "Remover Metas",
+                    value: "remover"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 }
@@ -120,6 +154,9 @@ const start = async() => {
             case "abertas":
                 await metasAbertas()
                 break
+            case "remover":
+                    await removerMetas()
+                    break
             case "sair":
                 console.log("Até a próxima e boa sorte!")
                 return
